@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: bpmcp
+        options: >-
+          --health-cmd="pg_isready -U postgres -d bpmcp"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=20
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bpmcp
+      MODE: pg
+      ARFITI_API_KEY_SINGLE: arf_live_dev
+      CI: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node & pnpm
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Apply schema
+        run: pnpm db:apply
+
+      - name: Validate seeds
+        run: pnpm seed:validate
+
+      - name: Load seeds
+        run: pnpm seed:pg
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Start MCP stack
+        run: |
+          MODE=pg ARFITI_API_KEY_SINGLE=arf_live_dev node apps/catalog-mcp/dist/index.js &
+          echo "CATALOG_PID=$!" >> $GITHUB_ENV
+          ARFITI_API_KEY_SINGLE=arf_live_dev node apps/policy-mcp/dist/index.js &
+          echo "POLICY_PID=$!" >> $GITHUB_ENV
+          ARFITI_API_KEY_SINGLE=arf_live_dev PORT=4010 node apps/mock-payhawk-mcp/dist/index.js &
+          echo "PROVIDER_PID=$!" >> $GITHUB_ENV
+          API_KEY=arf_live_dev node apps/dev-gateway-mcp/dist/index.js &
+          echo "GATEWAY_PID=$!" >> $GITHUB_ENV
+          for i in {1..40}; do
+            curl -fsS http://localhost:4000/healthz >/dev/null 2>&1 && break || sleep 1
+          done
+          curl -fsS http://localhost:4000/healthz
+          for i in {1..40}; do
+            curl -fsS http://localhost:4005/healthz >/dev/null 2>&1 && break || sleep 1
+          done
+          curl -fsS http://localhost:4005/healthz
+          for i in {1..40}; do
+            curl -fsS http://localhost:4020/healthz >/dev/null 2>&1 && break || sleep 1
+          done
+          curl -fsS http://localhost:4020/healthz
+
+      - name: Gateway smoke test
+        run: |
+          curl -sS http://localhost:4020/mcp \
+            -H "Authorization: Bearer arf_live_dev" -H "Content-Type: application/json" \
+            -d '{"tool":"catalog.search","input":{"q":"per-diem"}}' | jq -e '.content[0].json.results | length > 0'
+          curl -sS http://localhost:4020/mcp \
+            -H "Authorization: Bearer arf_live_dev" -H "Content-Type: application/json" \
+            -d '{"tool":"policy.per_diem_amount","input":{"destination":"Germany","start_date":"2025-10-02","end_date":"2025-10-04"}}' | jq -e '.content[0].json.amount_total'
+          curl -sS http://localhost:4020/mcp \
+            -H "Authorization: Bearer arf_live_dev" -H "Content-Type: application/json" \
+            -d '{"tool":"payhawk.attach_document","input":{"expense_id":"exp_42","file_id":"file_1"}}' | jq -e '.content[0].json.status'
+          curl -sS http://localhost:4020/mcp \
+            -H "Authorization: Bearer arf_live_dev" -H "Content-Type: application/json" \
+            -d '{"tool":"brex.attach_receipt","input":{"expense_id":"exp_99","file_id":"file_2"}}' | jq -e '.content[0].json.status'
+
+      - name: Stop MCP stack
+        if: always()
+        run: |
+          for var in CATALOG_PID POLICY_PID PROVIDER_PID GATEWAY_PID; do
+            pid="${!var}"
+            if [ -n "$pid" ]; then
+              kill "$pid" 2>/dev/null || true
+            fi
+          done

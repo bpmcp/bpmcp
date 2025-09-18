@@ -1,0 +1,40 @@
+{
+  "name": "bpmcp",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Business Process MCP (BPMCP) monorepo",
+  "packageManager": "pnpm@9.6.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "docs"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -b",
+    "build": "pnpm -r build",
+    "test": "vitest run",
+    "dev": "echo \"select a package to run (e.g., pnpm --filter @bpmcp/catalog-mcp dev)\"",
+    "db:apply": "./scripts/db_apply.sh",
+    "seed:validate": "pnpm --filter @bpmcp/schema bpmcp-validate bundle packages/examples/seeds/bundle",
+    "seed:pg": "tsx scripts/load_seeds.ts packages/examples/seeds/bundle",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish",
+    "dev:gateway": "node --loader tsx apps/dev-gateway-mcp/src/index.ts",
+    "dev:policy": "pnpm --filter @bpmcp/policy-mcp dev",
+    "dev:mock-payhawk": "pnpm --filter @bpmcp/mock-payhawk-mcp dev"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.7",
+    "@types/node": "^20.12.12",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.3",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

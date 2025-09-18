@@ -1,0 +1,36 @@
+{
+  "name": "@bpmcp/schema",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./schemas": "./dist/schemas"
+  },
+  "bin": {
+    "bpmcp-validate": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "generate": "node ./dist/generate.js",
+    "prepublishOnly": "pnpm run build && pnpm run generate"
+  },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "fast-glob": "^3.3.3",
+    "fs-extra": "^11.3.2",
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.24.6"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4"
+  }
+}

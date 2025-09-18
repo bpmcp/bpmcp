@@ -1,0 +1,14 @@
+[
+  {
+    "vehicle": "car",
+    "currency": "EUR",
+    "per_km": 0.3,
+    "valid_from": "2025-01-01"
+  },
+  {
+    "vehicle": "bike",
+    "currency": "EUR",
+    "per_km": 0.1,
+    "valid_from": "2025-01-01"
+  }
+]

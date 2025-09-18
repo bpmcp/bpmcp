@@ -1,0 +1,12 @@
+{
+  "id": "atom_capture_receipt",
+  "title": "Capture receipt",
+  "type": "procedure",
+  "platform": "Mobile",
+  "steps": [
+    { "text": "Open app and take photo of the receipt", "mode": "ui" },
+    { "text": "Attach image to the per-diem entry", "mode": "ui" }
+  ],
+  "notes": [],
+  "meta": {}
+}

@@ -1,0 +1,12 @@
+{
+  "id": "per-diem-agent",
+  "process_id": "p2p/per-diem",
+  "version": "1.0.0",
+  "description": "Example per-diem agent with two basic capabilities.",
+  "capabilities": [
+    { "name": "request_per_diem" },
+    { "name": "settle_per_diem" }
+  ],
+  "dependencies": [],
+  "meta": {}
+}

@@ -1,0 +1,19 @@
+catalog:
+  base_url: http://localhost:4000
+  auth: passthrough
+
+policy:
+  base_url: http://localhost:4005
+  auth: passthrough
+
+providers:
+  payhawk:
+    servers:
+      default:
+        base_url: http://localhost:4010
+        auth: passthrough
+  brex:
+    servers:
+      default:
+        base_url: http://localhost:4010
+        auth: passthrough

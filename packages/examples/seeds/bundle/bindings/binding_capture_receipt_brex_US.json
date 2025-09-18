@@ -1,0 +1,10 @@
+{
+  "atom_id": "atom_capture_receipt",
+  "process_id": "p2p/per-diem",
+  "provider": "brex",
+  "jurisdiction": "US",
+  "mcp_server": "brex-mcp",
+  "tool_map": { "capture": "brex.attach_receipt" },
+  "preconditions": [],
+  "version": "1.0.0"
+}

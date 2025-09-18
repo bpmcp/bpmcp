@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "env": {
+    "es2022": true,
+    "node": true
+  },
+  "parserOptions": {
+    "project": ["./tsconfig.json"],
+    "tsconfigRootDir": "."
+  },
+  "ignorePatterns": [
+    "**/dist",
+    "**/.build",
+    "**/node_modules"
+  ]
+}

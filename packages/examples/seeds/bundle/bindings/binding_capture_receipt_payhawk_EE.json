@@ -1,0 +1,10 @@
+{
+  "atom_id": "atom_capture_receipt",
+  "process_id": "p2p/per-diem",
+  "provider": "payhawk",
+  "jurisdiction": "EE",
+  "mcp_server": "payhawk-mcp",
+  "tool_map": { "capture": "payhawk.attach_document" },
+  "preconditions": [],
+  "version": "1.0.0"
+}
