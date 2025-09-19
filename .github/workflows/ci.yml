@@ -40,7 +40,8 @@ jobs:
         with:
           version: 9
           run_install: false
-      - run: corepack enable
+      - name: Verify pnpm
+        run: pnpm --version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile=false
