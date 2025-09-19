@@ -61,6 +61,7 @@ jobs:
 
       - name: Start MCP stack
         run: |
+          cp apps/dev-gateway-mcp/providers.sample.yml apps/dev-gateway-mcp/providers.yml
           MODE=pg ARFITI_API_KEY_SINGLE=arf_live_dev node apps/catalog-mcp/dist/index.js &
           echo "CATALOG_PID=$!" >> $GITHUB_ENV
           ARFITI_API_KEY_SINGLE=arf_live_dev node apps/policy-mcp/dist/index.js &
