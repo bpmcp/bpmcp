@@ -1,0 +1,26 @@
+# Contributing
+
+## Workspace Basics
+```bash
+pnpm install
+pnpm -r build
+pnpm lint
+pnpm test
+```
+
+## Development Stack
+- Catalog MCP: `pnpm --filter @bpmcp/catalog-mcp dev`
+- Policy MCP: `pnpm --filter @bpmcp/policy-mcp dev`
+- Mock provider: `pnpm --filter @bpmcp/mock-payhawk-mcp dev`
+- Dev gateway: `pnpm dev:gateway`
+
+## Validation
+```bash
+pnpm seed:validate
+pnpm seed:pg
+```
+
+## Submit a PR
+1. Run the test suite and lint.
+2. Create a changeset (`pnpm changeset`).
+3. Describe changes + testing steps in the PR.

@@ -1,0 +1,18 @@
+# Protocol Rules (5 + 5)
+
+Every BPMCP process **must** satisfy the following:
+
+- **5 phases** (`seq` 1..5, unique ids, same process_id).
+- **5 flows** forming a **single directed cycle** (each phase has exactly one inbound and one outbound flow).
+
+### Validator CLI
+```bash
+pnpm --filter @bpmcp/schema bpmcp-validate bundle packages/examples/seeds/bundle --bundle
+```
+
+### Recommended Phase Names
+`capture`, `enrich`, `approval`, `posting`, `payment`
+
+### Flow Guidance
+- Flows link phase ids (e.g., `capture -> enrich`).
+- Cycle must return to the first phase (5 edges total).

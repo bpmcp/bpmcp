@@ -23,7 +23,10 @@
     "release": "pnpm build && changeset publish",
     "dev:gateway": "node --loader tsx apps/dev-gateway-mcp/src/index.ts",
     "dev:policy": "pnpm --filter @bpmcp/policy-mcp dev",
-    "dev:mock-payhawk": "pnpm --filter @bpmcp/mock-payhawk-mcp dev"
+    "dev:mock-payhawk": "pnpm --filter @bpmcp/mock-payhawk-mcp dev",
+    "docs:oss:dev": "pnpm --filter @bpmcp/docs-oss dev",
+    "docs:oss:build": "pnpm --filter @bpmcp/docs-oss build",
+    "docs:oss:export": "pnpm --filter @bpmcp/docs-oss export"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",

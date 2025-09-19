@@ -1,0 +1,27 @@
+# Examples
+
+## List Atoms via Dev Gateway
+```bash
+curl -sS http://localhost:4020/mcp \
+  -H 'Authorization: Bearer arf_live_dev' \
+  -H 'Content-Type: application/json' \
+  -d '{"tool":"atoms.list","input":{"process_id":"p2p/per-diem","phase_id":"approval","provider":"payhawk","jurisdiction":"EE"}}' | jq .
+```
+
+## Per-Diem Runner (Catalog + Policy)
+```bash
+pnpm --filter @bpmcp/examples run -- \
+  --url http://localhost:4000 \
+  --key arf_live_dev \
+  --process p2p/per-diem \
+  --provider payhawk \
+  --jurisdiction EE
+```
+
+## Policy MCP (Mileage)
+```bash
+curl -sS http://localhost:4005 \
+  -H 'Authorization: Bearer arf_live_dev' \
+  -H 'Content-Type: application/json' \
+  -d '{"tool":"policy.mileage_amount","input":{"km":120,"vehicle":"car"}}'
+```

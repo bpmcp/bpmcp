@@ -1,0 +1,55 @@
+# Quickstart
+
+## 1. Install & Validate
+```bash
+pnpm install
+pnpm seed:validate
+```
+
+## 2. Load Seeds into Postgres
+```bash
+export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/bpmcp
+createdb bpmcp || true
+pnpm seed:pg
+```
+> Seeds include policy per-diem and mileage rates.
+
+## 3. Run Reference MCPs
+```bash
+MODE=pg ARFITI_API_KEY_SINGLE=arf_live_dev pnpm --filter @bpmcp/catalog-mcp dev
+ARFITI_API_KEY_SINGLE=arf_live_dev pnpm --filter @bpmcp/policy-mcp dev
+ARFITI_API_KEY_SINGLE=arf_live_dev pnpm --filter @bpmcp/mock-payhawk-mcp dev
+```
+
+## 4. Call the APIs
+```bash
+curl -sS http://localhost:4000 \
+  -H 'Authorization: Bearer arf_live_dev' \
+  -H 'Content-Type: application/json' \
+  -d '{"tool":"atoms.list","input":{"process_id":"p2p/per-diem","phase_id":"capture","provider":"payhawk","jurisdiction":"EE"}}' | jq .
+
+curl -sS http://localhost:4005 \
+  -H 'Authorization: Bearer arf_live_dev' \
+  -H 'Content-Type: application/json' \
+  -d '{"tool":"policy.per_diem_amount","input":{"destination":"Germany","start_date":"2025-10-02","end_date":"2025-10-04"}}' | jq .
+```
+
+## 5. Optional: Dev Gateway
+```bash
+cp apps/dev-gateway-mcp/providers.sample.yml apps/dev-gateway-mcp/providers.yml
+API_KEY=arf_live_dev pnpm dev:gateway
+curl -sS http://localhost:4020/mcp \
+  -H 'Authorization: Bearer arf_live_dev' \
+  -H 'Content-Type: application/json' \
+  -d '{"tool":"catalog.search","input":{"q":"per-diem"}}'
+```
+
+## 6. Runner Example
+```bash
+pnpm --filter @bpmcp/examples run -- \
+  --url http://localhost:4000 \
+  --key arf_live_dev \
+  --process p2p/per-diem \
+  --provider payhawk \
+  --jurisdiction EE
+```

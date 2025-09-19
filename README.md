@@ -13,6 +13,7 @@ BPMCP is an open protocol and reference implementation for describing business p
 - `@bpmcp/mock-payhawk-mcp` – Stub provider implementing `payhawk.*` and `brex.*` tools for demos.
 - `schemas/sql/` – Canonical Postgres schema (FTS trigger + optional pgvector hooks).
 - `scripts/` – Database bootstrap and seed loader utilities.
+- `docs-oss/` – Nextra-based documentation site (exported and published via GitHub Pages).
 
 ## Quick Start
 ```bash
@@ -47,6 +48,7 @@ pnpm --filter @bpmcp/examples run -- \
 ```
 
 More walkthroughs and IDE snippets: `docs/quickstart.md`.
+Published docs: https://bpmcp.github.io/bpmcp/oss
 
 ## Development
 - `pnpm build` – build all workspace packages.

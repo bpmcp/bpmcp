@@ -1,0 +1,28 @@
+# MCP Tools API (Reference Servers)
+
+## catalog.search
+- **Input**: `{ q?, domain?, process_id?, provider?, jurisdiction?, type?, limit? }`
+- **Output**: `{ results: [{ kind, id, title, snippet? }] }`
+- **Usage**: Discover processes, atoms, and agents.
+
+## process.topology
+- **Input**: `{ process_id }`
+- **Output**: `{ phases: [{id,seq,title}], flows: [{id,from,to}], cycle: string[] }`
+- **Usage**: Inspect the 5+5 topology for planning.
+
+## atoms.list
+- **Input**: `{ process_id, phase_id? | flow_id?, provider, jurisdiction }`
+- **Output**: `{ atoms: [{ id, title, notes?, steps: [{ text, mode, mcp_tools? }] }] }`
+- **Usage**: Resolve atoms + mapped provider tools.
+
+## agents.describe
+- **Input**: `{ id }`
+- **Output**: Agent manifest (capabilities, dependencies, metadata).
+
+## policy.per_diem_amount
+- **Input**: `{ destination, start_date, end_date, role?, partial_days? }`
+- **Output**: `{ currency, days, daily_amount, amount_total, breakdown }`
+
+## policy.mileage_amount
+- **Input**: `{ km, vehicle?, date? }`
+- **Output**: `{ currency, per_km, km, amount_total }`

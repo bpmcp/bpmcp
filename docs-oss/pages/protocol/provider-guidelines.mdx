@@ -1,0 +1,22 @@
+# Provider Guidelines
+
+## Tool Naming
+- Use `<provider>.<verb>[ _object ]` (e.g., `payhawk.attach_document`, `brex.attach_receipt`).
+- Each tool is exposed by a provider MCP server referenced in bindings.
+
+## Bindings
+- `tool_map` keys must match the hints in atom steps (`mcp_tools`).
+- Values reference provider tool identifiers.
+- Bindings are scoped by `provider`, `jurisdiction`, and optional `mcp_server` labels.
+
+## Authentication
+- Keep credentials out of bindings; leverage MCP server configuration.
+- Document auth expectations (API keys, OAuth scopes) alongside provider MCPs.
+
+## Error Responses
+- Return structured errors (`code`, `message`) with actionable hints.
+- Avoid leaking internal stack traces or request identifiers.
+
+## Testing
+- Provide sandbox environments or mock servers whenever possible.
+- Validate bindings via `pnpm seed:validate` + integration smoke tests through the Dev Gateway.
