@@ -92,23 +92,23 @@ async function main(): Promise<void> {
 
     const atoms = await readDirJSON<any>(path.join(bundleDir, "atoms"));
     for (const atom of atoms) {
-    await client.query(
-      `INSERT INTO atoms (id, title, type, platform, source_url, source_rev, prereq, notes, steps, meta)
+      await client.query(
+        `INSERT INTO atoms (id, title, type, platform, source_url, source_rev, prereq, notes, steps, meta)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
          ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, type = EXCLUDED.type, platform = EXCLUDED.platform, notes = EXCLUDED.notes, steps = EXCLUDED.steps, meta = EXCLUDED.meta, updated_at = now()`,
-      [
-        atom.id,
-        atom.title,
-        atom.type,
-        atom.platform,
-        atom.source_url ?? null,
-        atom.source_rev ?? null,
-        atom.prereq ?? null,
-        atom.notes ?? [],
-        atom.steps ?? [],
-        atom.meta ?? {}
-      ]
-    );
+        [
+          atom.id,
+          atom.title,
+          atom.type,
+          atom.platform,
+          atom.source_url ?? null,
+          atom.source_rev ?? null,
+          atom.prereq ?? null,
+          JSON.stringify(atom.notes ?? []),
+          JSON.stringify(atom.steps ?? []),
+          JSON.stringify(atom.meta ?? {})
+        ]
+      );
     }
 
     const atomLinks = await readDirJSON<any>(path.join(bundleDir, "atom_links"));
@@ -140,8 +140,8 @@ async function main(): Promise<void> {
           binding.provider,
           binding.jurisdiction,
           binding.mcp_server,
-          binding.tool_map ?? {},
-          binding.preconditions ?? [],
+          JSON.stringify(binding.tool_map ?? {}),
+          JSON.stringify(binding.preconditions ?? []),
           binding.version ?? "1.0.0"
         ]
       );
@@ -158,9 +158,9 @@ async function main(): Promise<void> {
           agent.process_id,
           agent.version ?? "1.0.0",
           agent.description ?? null,
-          agent.capabilities ?? [],
-          agent.dependencies ?? [],
-          agent.meta ?? {}
+          JSON.stringify(agent.capabilities ?? []),
+          JSON.stringify(agent.dependencies ?? []),
+          JSON.stringify(agent.meta ?? {})
         ]
       );
     }
