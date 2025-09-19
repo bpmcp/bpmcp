@@ -48,7 +48,7 @@ pnpm --filter @bpmcp/examples run -- \
 ```
 
 More walkthroughs and IDE snippets: `docs/quickstart.md`.
-Published docs: https://bpmcp.github.io/bpmcp/oss
+Published docs: https://docs.bpmcp.dev
 
 ## Development
 - `pnpm build` – build all workspace packages.
