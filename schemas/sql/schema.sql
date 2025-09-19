@@ -131,10 +131,10 @@ BEGIN
   NEW.fts :=
     setweight(to_tsvector('simple', coalesce(NEW.title,'')), 'A') ||
     setweight(to_tsvector('simple', coalesce(ARRAY_TO_STRING(ARRAY(
-      SELECT value::json->>'text' FROM json_array_elements(coalesce(NEW.steps,'[]'::json)) AS value
+      SELECT elem->>'text' FROM jsonb_array_elements(coalesce(NEW.steps,'[]'::jsonb)) AS elem
     ), ' '),'')), 'B') ||
     setweight(to_tsvector('simple', coalesce(ARRAY_TO_STRING(ARRAY(
-      SELECT value::text FROM json_array_elements_text(coalesce(NEW.notes,'[]'::json))
+      SELECT elem::text FROM jsonb_array_elements_text(coalesce(NEW.notes,'[]'::jsonb)) AS elem
     ), ' '),'')), 'C');
   RETURN NEW;
 END$$ LANGUAGE plpgsql;
