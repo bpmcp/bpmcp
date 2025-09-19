@@ -92,6 +92,9 @@ async function main(): Promise<void> {
 
     const atoms = await readDirJSON<any>(path.join(bundleDir, "atoms"));
     for (const atom of atoms) {
+      const notes = JSON.stringify(atom.notes ?? []);
+      const steps = JSON.stringify(atom.steps ?? []);
+      const meta = JSON.stringify(atom.meta ?? {});
       await client.query(
         `INSERT INTO atoms (id, title, type, platform, source_url, source_rev, prereq, notes, steps, meta)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
@@ -104,9 +107,9 @@ async function main(): Promise<void> {
           atom.source_url ?? null,
           atom.source_rev ?? null,
           atom.prereq ?? null,
-          JSON.stringify(atom.notes ?? []),
-          JSON.stringify(atom.steps ?? []),
-          JSON.stringify(atom.meta ?? {})
+          notes,
+          steps,
+          meta
         ]
       );
     }
@@ -129,6 +132,8 @@ async function main(): Promise<void> {
 
     const bindings = await readDirJSON<any>(path.join(bundleDir, "bindings"));
     for (const binding of bindings) {
+      const toolMap = JSON.stringify(binding.tool_map ?? {});
+      const preconditions = JSON.stringify(binding.preconditions ?? []);
       await client.query(
         `INSERT INTO bindings (atom_id, process_id, provider, jurisdiction, mcp_server, tool_map, preconditions, version)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
@@ -140,8 +145,8 @@ async function main(): Promise<void> {
           binding.provider,
           binding.jurisdiction,
           binding.mcp_server,
-          JSON.stringify(binding.tool_map ?? {}),
-          JSON.stringify(binding.preconditions ?? []),
+          toolMap,
+          preconditions,
           binding.version ?? "1.0.0"
         ]
       );
@@ -149,6 +154,9 @@ async function main(): Promise<void> {
 
     const agents = await readDirJSON<any>(path.join(bundleDir, "agents"));
     for (const agent of agents) {
+      const capabilities = JSON.stringify(agent.capabilities ?? []);
+      const dependencies = JSON.stringify(agent.dependencies ?? []);
+      const meta = JSON.stringify(agent.meta ?? {});
       await client.query(
         `INSERT INTO agents (id, process_id, version, description, capabilities, dependencies, meta)
          VALUES ($1,$2,$3,$4,$5,$6,$7)
@@ -158,9 +166,9 @@ async function main(): Promise<void> {
           agent.process_id,
           agent.version ?? "1.0.0",
           agent.description ?? null,
-          JSON.stringify(agent.capabilities ?? []),
-          JSON.stringify(agent.dependencies ?? []),
-          JSON.stringify(agent.meta ?? {})
+          capabilities,
+          dependencies,
+          meta
         ]
       );
     }
