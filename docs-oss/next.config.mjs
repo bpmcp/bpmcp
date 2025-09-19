@@ -8,7 +8,6 @@ const withNextra = nextra({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  basePath: '/oss',
   images: { unoptimized: true }
 }
 
